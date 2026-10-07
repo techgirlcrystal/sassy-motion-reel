@@ -1,6 +1,6 @@
 // Render one layer of the reel to video. Run from the project's motion/ folder with a server on the project root.
 // node render-layer.js <back|front> <out> <scale 0.5|1> <subframes 1|2> [t0] [t1] [port=8765]
-// back -> H.264 mp4 (opaque). front -> ProRes 4444 .mov (transparent). subframes 2 = motion blur.
+// back -> H.264 mp4 (opaque). front -> ProRes 4444 .mov (transparent). subframes 2 = motion blur (back layer only).
 const {chromium}=require('playwright');const {spawn}=require('child_process');
 (async()=>{
  const [layer,out,sc,K0,t0a,t1a,port]=process.argv.slice(2);const SCALE=+sc,K=+K0||1,FPS=30,PORT=port||8765;
