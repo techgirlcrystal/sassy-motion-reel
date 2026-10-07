@@ -1,0 +1,141 @@
+<title>__REEL_NAME__ Review</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@800;900&family=Montserrat:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: phone-width review column. Video pinned on top, beat cards below, each with its own note box. Deliberately dark to match the reel. */
+:root{
+  --bg:#0B0A12; --surface:#15131F; --surface-2:#1D1A2B; --line:#2B2740;
+  --fg:#F4F1FB; --muted:#A79FC2; --orange:#F26A21; --orange-hover:#D95A15;
+  --purple:#8B4FD9; --ok:#3FBF7F;
+  --display:"Playfair Display",Georgia,serif; --body:"Montserrat",system-ui,sans-serif;
+  color-scheme:dark;
+}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:15px;line-height:1.55}
+.wrap{max-width:720px;margin:0 auto;padding-inline:16px;padding-block:24px 64px;display:grid;gap:24px}
+.eyebrow{font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--purple)}
+h1{font-family:var(--display);font-weight:900;font-size:clamp(32px,7vw,44px);line-height:1.1;margin:4px 0 8px;text-wrap:balance}
+h1 em{font-style:normal;color:var(--orange)}
+.lede{color:var(--muted);margin:0;max-width:60ch}
+.player{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-block:8px;display:flex;justify-content:center}
+.frame{width:min(100%,300px);aspect-ratio:9/16;max-width:100%;border-radius:14px;overflow:hidden;background:var(--surface);border:1px solid var(--line);position:relative}
+.frame video{width:100%;height:100%;display:block;object-fit:cover;background:#000}
+.empty{position:absolute;inset:0;display:grid;place-content:center;text-align:center;padding:24px;gap:8px;color:var(--muted)}
+.empty b{font-family:var(--display);font-size:24px;color:var(--fg)}
+.general,.beat{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px;display:grid;gap:12px}
+.beat-head{display:flex;gap:12px;align-items:flex-start}
+.time{font-variant-numeric:tabular-nums;font-weight:700;font-size:13px;background:var(--surface-2);border:1px solid var(--line);color:var(--fg);border-radius:999px;padding:6px 12px;cursor:pointer;white-space:nowrap}
+.time:hover{border-color:var(--orange)}
+.time:focus-visible,button:focus-visible,textarea:focus-visible{outline:2px solid var(--orange);outline-offset:2px}
+.beat h2{font-size:17px;font-weight:700;margin:0 0 2px}
+.says{color:var(--muted);font-size:14px;margin:0}
+.screen{font-size:14px;margin:0}
+.screen span{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--purple);margin-right:6px}
+textarea{width:100%;box-sizing:border-box;min-height:72px;resize:vertical;background:var(--bg);color:var(--fg);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font:inherit;font-size:14px}
+.row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.save{background:transparent;color:var(--fg);border:2px solid var(--purple);border-radius:999px;padding:8px 20px;font:600 14px var(--body);cursor:pointer;transition:background .15s ease-out}
+.save:hover{background:var(--purple)}
+.save[disabled]{opacity:.5;cursor:default;background:transparent}
+.status{font-size:13px;color:var(--muted)}
+.notes{display:grid;gap:8px;margin:0;padding:0;list-style:none}
+.notes li{background:var(--surface-2);border-radius:10px;padding:10px 12px;font-size:14px;display:grid;gap:4px}
+.notes .meta{font-size:12px;color:var(--muted);display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.pill{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;border-radius:999px;padding:2px 8px}
+.pill.open{background:rgba(242,106,33,.16);color:var(--orange)}
+.pill.fixed{background:rgba(63,191,127,.16);color:var(--ok)}
+.del{background:none;border:none;color:var(--muted);font:inherit;font-size:12px;cursor:pointer;text-decoration:underline;padding:0}
+.offline{border:1px solid var(--orange);color:var(--fg);border-radius:12px;padding:12px 16px;font-size:14px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<main class="wrap">
+  <header>
+    <div class="eyebrow">__REEL_NAME__</div>
+    <h1>Tell me what to <em>change</em></h1>
+    <p class="lede">Play the draft. Tap a time to jump there. Type your change in that moment's box and hit Save. I read every note and mark it fixed when it's done.</p>
+  </header>
+
+  <div class="player">
+    <div class="frame">
+      <video id="vid" src="draft.mp4" controls playsinline preload="metadata"></video>
+      <div class="empty" id="empty" hidden><b>Draft coming</b><span>The 480p draft lands here as soon as it's rendered. You can leave notes on the plan below right now.</span></div>
+    </div>
+  </div>
+
+  <p class="offline" id="offline" hidden>Notes can't save in this view. Open this page signed in to claude.ai to leave notes.</p>
+
+  <section class="general" data-beat="general">
+    <div>
+      <h2 style="font-size:17px;margin:0 0 2px">Whole video</h2>
+      <p class="says">Music, colors, pace, fonts, anything that isn't one moment.</p>
+    </div>
+    <div class="slot"></div>
+  </section>
+
+  <div id="beats" style="display:grid;gap:16px"></div>
+</main>
+
+<script>
+// One entry per moment. t = seconds where it starts. Fill from the timeline plan.
+const BEATS=[
+  {id:"b01",t:0,title:"Opening",says:"\u201cFirst line they say.\u201d",screen:"What appears on screen"}
+];
+const fmt=s=>{const m=Math.floor(s/60),r=Math.floor(s%60);return m+":"+String(r).padStart(2,"0")};
+const vid=document.getElementById("vid");
+vid.addEventListener("error",()=>{document.getElementById("empty").hidden=false;vid.hidden=true});
+
+const host=document.getElementById("beats");
+for(const b of BEATS){
+  const el=document.createElement("section");el.className="beat";el.dataset.beat=b.id;
+  el.innerHTML=`<div class="beat-head"><button class="time" type="button">${fmt(b.t)}</button><div><h2></h2><p class="says"></p></div></div><p class="screen"><span>On screen</span></p><div class="slot"></div>`;
+  el.querySelector("h2").textContent=b.title;
+  el.querySelector(".says").textContent=b.says;
+  el.querySelector(".screen").append(b.screen);
+  el.querySelector(".time").addEventListener("click",()=>{if(!vid.hidden){vid.currentTime=b.t;vid.play().catch(()=>{})}});
+  host.append(el);
+}
+
+let db=null;const lists={};
+document.querySelectorAll("[data-beat]").forEach(sec=>{
+  const id=sec.dataset.beat;
+  const slot=sec.querySelector(".slot");
+  slot.innerHTML=`<ul class="notes"></ul><textarea id="note-${id}" placeholder="What should I change here?"></textarea><div class="row"><button class="save" type="button">Save note</button><span class="status" aria-live="polite"></span></div>`;
+  lists[id]=slot.querySelector(".notes");
+  const ta=slot.querySelector("textarea"),btn=slot.querySelector(".save"),st=slot.querySelector(".status");
+  try{const d=localStorage.getItem("draft-"+id);if(d)ta.value=d}catch(e){}
+  ta.addEventListener("input",()=>{try{localStorage.setItem("draft-"+id,ta.value)}catch(e){}});
+  btn.addEventListener("click",async()=>{
+    const text=ta.value.trim();if(!text){st.textContent="Type a note first.";return}
+    if(!db){st.textContent="Notes can't save in this view.";return}
+    btn.disabled=true;st.textContent="Saving…";
+    const beat=BEATS.find(b=>b.id===id);
+    try{
+      await db.collection("notes").add({beat:id,beatTitle:beat?beat.title:"Whole video",time:beat?fmt(beat.t):"",text,status:"open",createdAt:new Date().toISOString()});
+      ta.value="";try{localStorage.removeItem("draft-"+id)}catch(e){}
+      st.textContent="Saved. Claude will see it.";
+    }catch(e){st.textContent="Didn't save: "+(e&&e.message?e.message:"try again in a moment.")}
+    btn.disabled=false;
+  });
+});
+
+function render(docs){
+  for(const k in lists)lists[k].textContent="";
+  docs.sort((a,b)=>(a.d.createdAt||"").localeCompare(b.d.createdAt||""));
+  for(const {ref,d} of docs){
+    const ul=lists[d.beat];if(!ul)continue;
+    const li=document.createElement("li");
+    const p=document.createElement("div");p.textContent=d.text;
+    const meta=document.createElement("div");meta.className="meta";
+    const pill=document.createElement("span");pill.className="pill "+(d.status==="fixed"?"fixed":"open");pill.textContent=d.status==="fixed"?"Fixed":"Open";
+    meta.append(pill);
+    if(d.reply){const r=document.createElement("span");r.textContent="Claude: "+d.reply;meta.append(r)}
+    if(d.status!=="fixed"){const del=document.createElement("button");del.className="del";del.type="button";del.textContent="Remove";del.onclick=()=>ref.delete().catch(()=>{});meta.append(del)}
+    li.append(p,meta);ul.append(li);
+  }
+}
+
+(async()=>{
+  db=window.claude?await window.claude.use("db"):null;
+  if(!db){document.getElementById("offline").hidden=false;return}
+  db.collection("notes").onSnapshot(s=>render(s.docs.map(x=>({ref:x.ref||db.collection("notes").doc(x.id),d:x.data()||{}}))),()=>{});
+})();
+</script>

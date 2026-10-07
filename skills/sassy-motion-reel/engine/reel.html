@@ -1,0 +1,213 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Sassy Motion Reel</title>
+<style>
+@font-face{font-family:'Montserrat';font-weight:500;src:url(fonts/Montserrat-500-normal.woff2) format('woff2')}
+@font-face{font-family:'Montserrat';font-weight:700;src:url(fonts/Montserrat-700-normal.woff2) format('woff2')}
+@font-face{font-family:'Montserrat';font-weight:800;src:url(fonts/Montserrat-800-normal.woff2) format('woff2')}
+@font-face{font-family:'Montserrat';font-weight:900;src:url(fonts/Montserrat-900-normal.woff2) format('woff2')}
+@font-face{font-family:'Playfair Display';font-weight:900;font-style:italic;src:url(fonts/PlayfairDisplay-900-italic.woff2) format('woff2')}
+@font-face{font-family:'Playfair Display';font-weight:900;font-style:normal;src:url(fonts/PlayfairDisplay-900-normal.woff2) format('woff2')}
+:root{--accent:#F26A21;--accent2:#8B4FD9;--soft:#B89BE8;--ink:#0B0A12;--navy:#071A52}
+html,body{margin:0;background:transparent;overflow:hidden}
+#wrap{position:absolute;left:0;top:0;transform-origin:0 0}
+#stage{position:relative;width:1080px;height:1920px;overflow:hidden;font-family:'Montserrat',sans-serif;color:#fff;-webkit-font-smoothing:antialiased}
+body.back #stage{background:#05040A}
+.layer{position:absolute;inset:0}
+body.back #front, body.front #back{display:none}
+.bg{position:absolute;inset:-60px;background-size:cover;background-position:center;opacity:0}
+.bg.grad{background:radial-gradient(70% 45% at 15% 30%,var(--accent) 0%,transparent 70%),radial-gradient(70% 45% at 85% 40%,var(--accent2) 0%,transparent 70%),#05040A}
+#vignette{position:absolute;inset:0;background:radial-gradient(120% 70% at 50% 35%,rgba(5,4,10,0) 0%,rgba(5,4,10,.35) 60%,rgba(5,4,10,.85) 100%),linear-gradient(180deg,rgba(5,4,10,.55) 0%,rgba(5,4,10,0) 22%,rgba(5,4,10,0) 70%,rgba(5,4,10,.6) 100%)}
+.w{position:absolute;left:0;width:1080px;text-align:center;white-space:nowrap;font-weight:900;text-transform:uppercase;letter-spacing:-.02em;line-height:.9;opacity:0}
+.w.serif{font-family:'Playfair Display',serif;font-style:italic;text-transform:none;letter-spacing:-.01em}
+.w.outline{color:transparent;-webkit-text-stroke:5px var(--accent2)}
+.w .strike{position:absolute;left:50%;top:52%;height:22px;background:var(--accent);border-radius:12px;transform:translate(-50%,-50%) rotate(-4deg);width:0}
+.glow{text-shadow:0 0 40px color-mix(in srgb,var(--accent) 55%,transparent)}
+.card{position:absolute;opacity:0;transform-origin:50% 50%}
+.phone{width:250px;height:541px;border-radius:40px;background:#0d0c14;padding:11px;box-sizing:border-box;box-shadow:0 30px 80px rgba(0,0,0,.6),0 0 0 2px rgba(255,255,255,.08);position:relative}
+.phone img{width:100%;height:100%;object-fit:cover;object-position:top;border-radius:30px;display:block}
+.phone .notch{position:absolute;left:50%;top:18px;width:80px;height:22px;border-radius:12px;background:#0d0c14;transform:translateX(-50%)}
+.pic{border-radius:22px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.6);border:3px solid rgba(255,255,255,.9);background:#111;width:100%;height:100%;box-sizing:border-box}
+.pic img{width:100%;height:100%;object-fit:cover;display:block}
+.tag{position:absolute;left:14px;top:14px;font:800 20px 'Montserrat';letter-spacing:.08em;text-transform:uppercase;padding:8px 14px;border-radius:999px;background:rgba(7,6,14,.75);color:#fff;display:flex;align-items:center;gap:8px;white-space:nowrap}
+.tag i{width:12px;height:12px;border-radius:50%;background:#ff3b30;display:block}
+.stamp{font:900 64px 'Montserrat';color:#fff;background:var(--accent);padding:14px 34px;border-radius:999px;display:flex;align-items:center;gap:14px;box-shadow:0 18px 50px rgba(0,0,0,.45);white-space:nowrap}
+.pill{font:800 40px 'Montserrat';color:#fff;background:rgba(13,12,20,.85);border:2px solid var(--accent2);padding:16px 30px;border-radius:999px;display:flex;align-items:center;gap:14px;white-space:nowrap}
+.tool{font:900 54px 'Montserrat';padding:30px 40px;border-radius:28px;box-shadow:0 20px 60px rgba(0,0,0,.55);white-space:nowrap;min-width:240px;text-align:center}
+.xmark{position:relative;width:240px;height:200px;filter:drop-shadow(0 6px 18px rgba(0,0,0,.6))}
+.xmark b{position:absolute;left:50%;top:50%;width:250px;height:30px;margin:-15px 0 0 -125px;background:var(--accent);border-radius:16px;transform:rotate(38deg)}
+.xmark b+b{transform:rotate(-38deg)}
+.cta{width:680px;border-radius:36px;background:#fff;color:var(--ink);padding:30px 40px;box-sizing:border-box;box-shadow:0 30px 90px rgba(0,0,0,.6);text-align:left}
+.cta .k{font:700 34px 'Montserrat';color:#4b4566}
+.cta .big{font:900 100px/1 'Montserrat';color:var(--accent);letter-spacing:-.02em;margin:6px 0 16px}
+.cta .s{font:700 30px 'Montserrat';color:var(--navy);display:flex;align-items:center;gap:10px}
+.strip{display:flex;flex-direction:column;gap:12px}
+.strip .pic{width:92px;height:150px;border-radius:14px;border-width:2px;flex:none}
+.full{position:absolute;inset:0;overflow:hidden;background:#05040A}
+.fblur{position:absolute;inset:-80px;width:calc(100% + 160px);height:calc(100% + 160px);object-fit:cover;filter:blur(40px) brightness(.55)}
+.fwin{position:absolute;left:0;top:560px;width:1080px;height:610px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.6)}
+.fwin img{width:100%;height:100%;object-fit:cover;transform-origin:50% 50%}
+.fcover{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.fshade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,4,10,.75) 0%,rgba(5,4,10,0) 30%,rgba(5,4,10,0) 62%,rgba(5,4,10,.7) 100%)}
+.fhead{position:absolute;left:0;right:0;top:240px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:6px}
+.fnum{font:900 150px/1 'Montserrat';color:transparent;-webkit-text-stroke:4px var(--accent)}
+.ftxt{font:900 92px/1 'Montserrat';text-transform:uppercase;letter-spacing:-.02em;text-shadow:0 6px 30px rgba(0,0,0,.7);white-space:nowrap}
+.fpill{position:absolute;left:50%;top:1230px;transform:translateX(-50%)}
+.ftag{left:70px;top:auto;bottom:560px;font-size:28px;padding:12px 20px}
+.fstamp{position:absolute;left:540px;top:1100px;font-size:96px;padding:20px 50px}
+#cap{position:absolute;left:70px;right:170px;text-align:center;font:900 66px/1.08 'Montserrat';text-transform:uppercase;letter-spacing:-.01em}
+#cap span{display:inline-block;margin:0 10px;color:#fff;text-shadow:0 4px 0 rgba(0,0,0,.55),0 0 24px rgba(0,0,0,.7);-webkit-text-stroke:2px rgba(0,0,0,.35)}
+#cap span.on{color:var(--accent)}
+</style></head>
+<body>
+<div id="wrap"><div id="stage">
+  <div id="back" class="layer"><div id="plates"></div><div id="vignette"></div><div id="bwords"></div></div>
+  <div id="front" class="layer"><div id="takeovers"></div><div id="cards"></div><div id="fwords" class="layer"></div><div id="cap"></div></div>
+</div></div>
+<script src="motion.js"></script>
+<script>
+/* Sassy Motion Reel engine. Everything on screen comes from timeline.json.
+   Every frame is a pure function of time t, so any frame can be rendered alone. */
+const Q=new URLSearchParams(location.search);
+const LAYER=Q.get('layer')||'back', SCALE=+(Q.get('scale')||0.5), TL=Q.get('timeline')||'timeline.json';
+document.body.classList.add(LAYER);
+document.getElementById('wrap').style.transform=`scale(${SCALE})`;
+const {S,eo,clamp}=M, $=id=>document.getElementById(id);
+const R=src=>src.startsWith('http')||src.startsWith('/')?src:'../'+src;   // paths in timeline.json are relative to the project folder
+const COLOR={white:'#fff',accent:'var(--accent)',accent2:'var(--accent2)',soft:'var(--soft)'};
+const col=c=>COLOR[c]||c||'#fff';
+
+function slam(t,tin,tout,{from=1.45,out=0.18}={}){
+  if(t<tin-0.02||(tout!=null&&t>tout+out)) return null;
+  const a=S(t-tin,17,0.72), o1=clamp((t-tin)/0.1), b=tout==null?0:eo((t-tout)/out);
+  return {o:o1*(1-b), s:(from+(1-from)*a)*(1+0.06*b), blur:Math.max(0,(1-clamp((t-tin)/0.18))*14)+b*8};
+}
+function fly(t,tin,tout,{dx=0,dy=160,rot=0,r0=0,out=0.22}={}){
+  if(t<tin-0.02||(tout!=null&&t>tout+out)) return null;
+  const a=S(t-tin,13,0.78), o1=clamp((t-tin)/0.14), b=tout==null?0:eo((t-tout)/out);
+  return {o:o1*(1-b), x:dx*(1-a)-dx*0.4*b, y:dy*(1-a)+dy*0.4*b, r:r0+(rot-r0)*a, s:0.9+0.1*a-0.06*b};
+}
+function setStyle(el,v,base=''){
+  if(!v||v.o<0.003){el.style.opacity=0;el.style.display='none';return false}
+  el.style.display='';el.style.opacity=v.o.toFixed(3);
+  el.style.filter=v.blur>0.1?`blur(${v.blur.toFixed(1)}px)`:'none';
+  el.style.transform=`${base} translate(${(v.x||0).toFixed(1)}px,${(v.y||0).toFixed(1)}px) rotate(${(v.r||0).toFixed(2)}deg) scale(${(v.s??1).toFixed(4)})`;
+  return true;
+}
+const FROM={left:[-420,0],right:[420,0],bottom:[0,200],top:[0,-200]};
+const flyOpts=c=>{const d=FROM[c.from||(c.x<440?'left':'right')]||[0,160];const rot=c.rot||0;return {dx:d[0],dy:d[1],rot,r0:rot*3}};
+
+let T, END, plates=[], words=[], items=[], seqs=[], G=[];
+
+function build(){
+  const st=document.documentElement.style;
+  for(const k of ['accent','accent2','soft']) if(T.palette?.[k]) st.setProperty('--'+k,T.palette[k]);
+  END=T.end;
+  // plates
+  (T.plates?.length?T.plates:[{src:null,from:0,to:999}]).forEach(p=>{
+    const d=document.createElement('div');d.className='bg'+(p.src?'':' grad');if(p.src)d.style.backgroundImage=`url(${R(p.src)})`;
+    $('plates').append(d);plates.push({el:d,...p});
+  });
+  // words
+  for(const w of T.words||[]){
+    const d=document.createElement('div');d.className='w'+(w.style==='serif'?' serif':'')+(w.color==='outline'?' outline':'')+(w.glow?' glow':'');
+    d.textContent=w.text;d.style.top=w.y+'px';d.style.fontSize=w.size+'px';if(w.color!=='outline')d.style.color=col(w.color);
+    if(w.strike!=null){const s=document.createElement('div');s.className='strike';d.append(s);d._strike=s}
+    (w.layer==='front'?$('fwords'):$('bwords')).append(d);words.push({el:d,...w});
+  }
+  // takeovers (full screen, hide the speaker, voice keeps going)
+  for(const k of T.takeovers||[]){
+    const d=document.createElement('div');d.className='card';d.style.left='0px';d.style.top='0px';d.style.width='1080px';d.style.height='1920px';
+    const head=k.title?`<div class="fhead">${k.num?`<span class="fnum">${k.num}</span>`:''}<span class="ftxt"></span></div>`:'';
+    let inner='';
+    if(k.kind==='pan') inner=`<img class="fblur" src="${R(k.src)}"><div class="fwin"><img class="panimg" src="${R(k.src)}"></div>`;
+    if(k.kind==='flip') inner=k.images.map(([,src])=>`<img class="fcover flip" style="opacity:0" src="${R(src)}">`).join('')+'<div class="fshade"></div>';
+    if(k.kind==='frames') inner=`<img class="fcover seq" src="${R(k.dir)}/0001.jpg"><div class="fshade"></div>`;
+    d.innerHTML=`<div class="full">${inner}${head}${k.tag?`<div class="tag ftag">${k.kind==='frames'&&k.rec!==false?'<i></i>':M.icon('sparkle',22,'#fff',2.4)}<span></span></div>`:''}${k.pill?`<div class="pill fpill">${M.icon(k.pill.icon||'plus',40,'#fff',3)}<span></span></div>`:''}${k.stamp?`<div class="stamp fstamp">${M.icon('check',56,'#fff',3.2)}<span></span></div>`:''}</div>`;
+    if(k.title)d.querySelector('.ftxt').textContent=k.title;
+    if(k.tag)d.querySelector('.ftag span').textContent=k.tag;
+    if(k.pill)d.querySelector('.fpill span').textContent=k.pill.text;
+    if(k.stamp)d.querySelector('.fstamp span').textContent=k.stamp.text;
+    $('takeovers').append(d);
+    const it={el:d,k,f:t=>slam(t,k.in,k.out,{from:1.08})};
+    if(k.kind==='pan'){const ks=k.keys||[];it.z=M.track(1,ks.map(a=>[a[0],a[1]]),M.SOFT);it.px=M.track(0,ks.map(a=>[a[0],a[2]]),M.SOFT);it.py=M.track(0,ks.map(a=>[a[0],a[3]]),M.SOFT)}
+    if(k.kind==='frames') seqs.push({img:d.querySelector('.seq'),dir:R(k.dir),t0:k.in,n:k.count});
+    items.push(it);
+  }
+  // cards (in front of the speaker; keep them at the edges, never on the face)
+  for(const c of T.cards||[]){
+    const d=document.createElement('div');d.className='card';d.style.left=c.x+'px';d.style.top=c.y+'px';
+    if(c.w)d.style.width=c.w+'px';if(c.h)d.style.height=c.h+'px';
+    let f=t=>fly(t,c.in,c.out,flyOpts(c));
+    if(c.kind==='phone') d.innerHTML=`<div class="phone"><img src="${R(c.src)}"><div class="notch"></div></div>`;
+    if(c.kind==='image') d.innerHTML=`<div class="pic"><img src="${R(c.src)}"></div>`;
+    if(c.kind==='frames'){d.innerHTML=`<div class="pic"><img class="seq" src="${R(c.dir)}/0001.jpg"></div>${c.tag?`<div class="tag">${M.icon('sparkle',22,'#fff',2.4)}<span></span></div>`:''}`;if(c.tag)d.querySelector('.tag span').textContent=c.tag;seqs.push({img:d.querySelector('.seq'),dir:R(c.dir),t0:c.in,n:c.count})}
+    if(c.kind==='strip'){d.innerHTML=`<div class="strip">${c.srcs.map(s=>`<div class="pic"><img src="${R(s)}"></div>`).join('')}</div>`;f=t=>fly(t,c.in,c.out,{dx:-300,dy:0})}
+    if(c.kind==='pill'){d.innerHTML=`<div class="pill" ${c.accent?'style="border-color:var(--accent)"':''}>${c.icon?M.icon(c.icon,44,c.accent?'#F26A21':'#fff',3):''}<span></span></div>`;d.querySelector('span').textContent=c.text;f=t=>fly(t,c.in,c.out,{dx:0,dy:100})}
+    if(c.kind==='stamp'){d.innerHTML=`<div class="stamp">${M.icon('check',56,'#fff',3.2)}<span></span></div>`;d.querySelector('span').textContent=c.text;f=t=>{const v=slam(t,c.in,c.out,{from:2.2});if(v)v.r=c.rot??-8;return v}}
+    if(c.kind==='tool'){d.innerHTML=`<div class="tool"></div>`;const tl=d.firstChild;tl.textContent=c.text;tl.style.background=c.bg||'#fff';tl.style.color=c.fg||'#111';
+      if(c.xAt!=null){const x=document.createElement('div');x.className='card';x.style.left=(c.x+40)+'px';x.style.top=(c.y-30)+'px';x.style.zIndex=5;x.innerHTML='<div class="xmark"><b></b><b></b></div>';$('cards').append(x);items.push({el:x,f:t=>{const v=slam(t,c.xAt,c.out,{from:2.4});if(v)v.r=c.rot||0;return v}})}}
+    if(c.kind==='cta'){d.innerHTML=`<div class="cta"><div class="k"></div><div class="big"></div><div class="s">${M.icon('arrow',34,'#071A52',3)}<span></span></div></div>`;d.querySelector('.k').textContent=c.label||'Comment the word';d.querySelector('.big').textContent=c.word;d.querySelector('.s span').textContent=c.sub||'Link in bio';f=t=>fly(t,c.in,c.out??null,{dx:0,dy:260,rot:-2,r0:6})}
+    if(c.kind==='sparkle'){d.innerHTML=M.icon('sparkle',c.size||80,c.color==='accent2'?getComputedStyle(document.documentElement).getPropertyValue('--accent2'):getComputedStyle(document.documentElement).getPropertyValue('--accent'),2.6);f=t=>slam(t,c.in,c.out??null,{from:0.2})}
+    $('cards').append(d);items.push({el:d,f});
+  }
+}
+
+function drawPlates(t){
+  for(const p of plates){
+    const o=clamp((t-p.from+0.25)/0.5)*(1-clamp((t-p.to+0.25)/0.5));p.el.style.opacity=o.toFixed(3);
+    p.el.style.transform=`scale(${(1.04+0.08*clamp((t-p.from)/(p.to-p.from))).toFixed(4)})`;
+  }
+}
+function drawWords(t){
+  for(const w of words){
+    if((w.layer==='front')!==(LAYER==='front')) continue;
+    const v=slam(t,w.in,w.out,w.color==='outline'?{from:1.15}:{});
+    if(v&&w.color==='outline')v.o*=0.9;
+    if(setStyle(w.el,v)&&w.el._strike){const a=S(t-w.strike,16,0.85);w.el._strike.style.width=(Math.max(0,a)*Math.min(w.el.scrollWidth+40,1020)).toFixed(1)+'px'}
+  }
+}
+function drawTakeoverInsides(t){
+  for(const it of items){ if(!it.k) continue; const k=it.k;
+    if(k.kind==='pan'&&it.el.style.display!=='none') it.el.querySelector('.panimg').style.transform=`translate(${it.px(t).toFixed(1)}px,${it.py(t).toFixed(1)}px) scale(${it.z(t).toFixed(4)})`;
+    if(k.kind==='flip') [...it.el.querySelectorAll('.flip')].forEach((el,i)=>{const tin=k.images[i][0],nx=k.images[i+1]?k.images[i+1][0]:999;if(setStyle(el,slam(t,tin,nx+0.15,{from:1.12,out:0.15})))el.style.transform+=` scale(${(1+0.05*clamp((t-tin)/2.5)).toFixed(4)})`});
+    if(k.pill) setStyle(it.el.querySelector('.fpill'),fly(t,k.pill.in,k.out-0.1,{dx:0,dy:120}),'translateX(-50%)');
+    if(k.stamp){const v=slam(t,k.stamp.in,null,{from:2.6});if(v)v.r=-8;setStyle(it.el.querySelector('.fstamp'),v,'translate(-50%,-50%)')}
+  }
+}
+async function drawSeqs(t){
+  for(const s of seqs){const k=clamp(Math.floor((t-s.t0)*30)+1,1,s.n);if(s.img._k!==k){s.img._k=k;s.img.src=`${s.dir}/${String(k).padStart(4,'0')}.jpg`;try{await s.img.decode()}catch(e){}}}
+}
+function buildCaptions(W){
+  const c=T.captions||{}, fix=c.fix||{}, drop=new Set(c.drop||[]);
+  W=W.filter(w=>!drop.has(w.w.trim())).map(w=>({...w,w:fix[w.w.trim()]??w.w.trim()}));
+  const g=[];let cur=[];
+  W.forEach((w,i)=>{const p=W[i-1];if(cur.length&&(cur.length>=3||w.s-p.e>0.35||/[.,?!]$/.test(p.w)))(g.push(cur),cur=[]);cur.push(w)});
+  if(cur.length)g.push(cur);G=g;$('cap').style.top=(c.top||1400)+'px';
+}
+function drawCaptions(t){
+  const cap=$('cap'), hide=T.captions?.hideAfter??1e9;
+  const gi=G.findIndex((g,i)=>t>=g[0].s-0.05&&(i===G.length-1?t<END:t<G[i+1][0].s-0.05));
+  if(gi<0||t>=hide||T.captions?.off){cap.style.opacity=0;return}
+  const g=G[gi];
+  if(cap._g!==gi){cap._g=gi;cap.textContent='';g.forEach(w=>{const s=document.createElement('span');s.textContent=w.w.replace(/[.,]$/,'');cap.append(s)})}
+  cap.style.opacity=1;cap.style.transform=`scale(${(0.85+0.15*S(t-g[0].s+0.05,22,0.75)).toFixed(3)})`;
+  [...cap.children].forEach((sp,i)=>sp.classList.toggle('on',t>=g[i].s&&(i===g.length-1||t<g[i+1].s)));
+}
+
+window.seek=async t=>{
+  if(LAYER==='back'){drawPlates(t);drawWords(t);return}
+  for(const it of items) setStyle(it.el,it.f(t));
+  drawTakeoverInsides(t); await drawSeqs(t); drawWords(t); drawCaptions(t);
+};
+window.ready=(async()=>{
+  T=await (await fetch(TL)).json(); build(); window.DURATION=END;
+  const W=T.captions?.words?await (await fetch(R(T.captions.words))).json():[]; buildCaptions(W);
+  await document.fonts.ready;
+  // auto-fit: no big word may run past the platform safe width
+  document.querySelectorAll('.w,.ftxt').forEach(el=>{const max=el.classList.contains('ftxt')?860:900;let f=parseFloat(getComputedStyle(el).fontSize);const d=el.style.display;el.style.display='inline-block';el.style.width='auto';while(el.scrollWidth>max&&f>30){f-=4;el.style.fontSize=f+'px'}el.style.display=d;el.style.width=''});
+  await Promise.all([...document.images].map(i=>i.decode().catch(()=>{})));
+  await Promise.all(plates.filter(p=>p.src).map(p=>new Promise(r=>{const i=new Image();i.onload=i.onerror=r;i.src=R(p.src)})));
+  return true;
+})();
+</script>
+</body></html>
